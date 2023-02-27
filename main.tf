@@ -138,3 +138,13 @@ resource "aws_autoscaling_group" "asg" {
     }
   }
 }
+
+
+resource "aws_route53_record" "app" {
+  zone_id = "Z040944033CUGWUDK9I6T"
+  name    = "${var.component}-${var.env}.raviteja.online"
+  type    = "CNAME"
+  ttl     = 30
+  records = [var.alb]
+}
+# ALL COMPONENTS DNS POINT TO SAME LOAD BALANCER
