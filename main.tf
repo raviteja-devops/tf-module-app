@@ -148,3 +148,22 @@ resource "aws_route53_record" "app" {
   records = [var.alb]
 }
 # ALL COMPONENTS DNS POINT TO SAME LOAD BALANCER
+
+
+resource "aws_lb_target_group" "target_group" {
+  name     = "${var.component}-${var.env}"
+  port     = var.app_port
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
+
+  health_check {
+    enabled             = true
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    interval            = 5
+    path                = "/health"
+    protocol            = "HTTP"
+    timeout             = 2
+  }
+
+}
