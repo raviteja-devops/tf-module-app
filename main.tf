@@ -168,3 +168,36 @@ resource "aws_lb_target_group" "target_group" {
   }
 
 }
+
+
+# This is for backend components
+resource "aws_lb_listener_rule" "backend_rule" {
+  count        = var.listener_priority != 0 ? 1 : 0
+  listener_arn = var.listener
+  priority     = var.listener_priority
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_group.arn
+  }
+
+  condition {
+    host_header {
+      values = ["${var.component}-${var.env}.raviteja.online"]
+    }
+  }
+}
+# IF REQUEST IS COMING TO HOST HEADER THEN SEND IT TO TARGET GROUP: target_group_arn
+
+// This is only for frontend
+resource "aws_lb_listener" "frontend" {
+  count             = var.listener_priority == 0 ? 1 : 0
+  load_balancer_arn = var.alb_arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.target_group.arn
+  }
+}

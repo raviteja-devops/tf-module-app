@@ -10,3 +10,6 @@ variable "desired_capacity" {}
 variable "instance_type" {}
 variable "bastion_cidr" {}
 variable "alb" {}
+variable "listener" {}
+variable "listener_priority" {}
+variable "alb_arn" {}
